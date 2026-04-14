@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Import Data{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-upload"></i> Import Data</h2>
+
+<div class="row g-4">
+  <!-- Quick import -->
+  {% if files_present %}
+  <div class="col-lg-5">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-success text-white fw-semibold">
+        <i class="bi bi-lightning-charge"></i> Quick Import
+      </div>
+      <div class="card-body">
+        <p>The Excel files were detected in the project directory. Click below to import both at once.</p>
+        <ul class="text-muted small mb-3">
+          <li>UG Fall 2026 Enrollment and Schedule…xlsx</li>
+          <li>Fall 2026 – Room Grid.xlsx</li>
+        </ul>
+        <form method="post">
+          <input type="hidden" name="action" value="quick">
+          <button class="btn btn-success w-100">
+            <i class="bi bi-file-earmark-excel"></i> Import Project Files
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Manual upload -->
+  <div class="col-lg-{% if files_present %}7{% else %}8 offset-lg-2{% endif %}">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-dark text-white fw-semibold">
+        <i class="bi bi-file-earmark-arrow-up"></i> Upload Files
+      </div>
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          <input type="hidden" name="action" value="upload">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Enrollment &amp; Schedule File</label>
+            <input type="file" name="enrollment" class="form-control" accept=".xlsx,.xls">
+            <div class="form-text">
+              The flat table with CRN, course numbers, enrollment, rooms, instructors.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Room Grid File</label>
+            <input type="file" name="room_grid" class="form-control" accept=".xlsx,.xls">
+            <div class="form-text">
+              The visual Miller Hall classroom usage grid.
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-upload"></i> Upload &amp; Import
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm mt-4">
+  <div class="card-header fw-semibold"><i class="bi bi-question-circle"></i> What Gets Imported?</div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <h6>From the Enrollment file:</h6>
+        <ul class="small">
+          <li>All course sections (CRN, title, enrollment, type, credits)</li>
+          <li>Instructor assignments</li>
+          <li>Current room and time-slot assignments → saved as <span class="badge bg-warning text-dark">Proposed</span> entries</li>
+          <li>Room capacities</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h6>From the Room Grid file:</h6>
+        <ul class="small">
+          <li>Room numbers and seating capacities</li>
+          <li>Room type (Flat, Cluster, Tiered, Seminar…)</li>
+        </ul>
+        <p class="small text-muted">
+          Importing is safe to run multiple times — duplicate courses and rooms are skipped.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

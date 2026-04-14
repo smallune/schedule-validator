@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+  <div class="col">
+    <h2 class="mb-0">Dashboard</h2>
+    <p class="text-muted">Fall 2026 Undergraduate Scheduling</p>
+  </div>
+</div>
+
+<!-- Stat cards -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card text-center h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="stat-number text-primary">{{ stats.courses }}</div>
+        <div class="stat-label">Courses</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card text-center h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="stat-number text-secondary">{{ stats.rooms }}</div>
+        <div class="stat-label">Rooms</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card text-center h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="stat-number text-warning">{{ stats.constraints }}</div>
+        <div class="stat-label">Constraints</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card text-center h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="stat-number text-info">{{ stats.proposed }}</div>
+        <div class="stat-label">Proposed</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card text-center h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="stat-number text-success">{{ stats.confirmed }}</div>
+        <div class="stat-label">Confirmed</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card text-center h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="stat-number text-danger">{{ stats.unscheduled }}</div>
+        <div class="stat-label">Unscheduled</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <!-- Quick Start -->
+  <div class="col-lg-5">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-dark text-white fw-semibold">
+        <i class="bi bi-lightning-charge"></i> Quick Start
+      </div>
+      <div class="card-body d-grid gap-2">
+        {% if stats.courses == 0 %}
+        <div class="alert alert-info mb-2">
+          <i class="bi bi-info-circle"></i>
+          No data yet. Start by importing your Excel files.
+        </div>
+        {% if files_present %}
+        <form method="post" action="{{ url_for('import_page') }}">
+          <input type="hidden" name="action" value="quick">
+          <button class="btn btn-primary w-100">
+            <i class="bi bi-file-earmark-excel"></i> Quick Import (project files)
+          </button>
+        </form>
+        {% endif %}
+        <a href="{{ url_for('import_page') }}" class="btn btn-outline-primary">
+          <i class="bi bi-upload"></i> Import Files Manually
+        </a>
+        {% else %}
+        <a href="{{ url_for('schedule') }}" class="btn btn-success">
+          <i class="bi bi-grid-3x3-gap"></i> View Schedule
+        </a>
+        <form method="post" action="{{ url_for('schedule_generate') }}" id="gen-form-dash">
+          <button class="btn btn-primary w-100" id="gen-btn-dash">
+            <i class="bi bi-stars"></i> Generate / Refresh Schedule with AI
+          </button>
+        </form>
+        <a href="{{ url_for('constraints') }}" class="btn btn-outline-warning">
+          <i class="bi bi-plus-circle"></i> Add Professor Constraint
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="col-lg-7">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-dark text-white fw-semibold">
+        <i class="bi bi-info-circle"></i> How It Works
+      </div>
+      <div class="card-body">
+        <ol class="mb-0">
+          <li class="mb-2">
+            <strong>Import</strong> — Upload the Room Grid and Enrollment Excel files (or use Quick Import if they're already in the project folder).
+          </li>
+          <li class="mb-2">
+            <strong>Add Constraints</strong> — Enter any professor availability notes, room restrictions, or scheduling preferences under <em>Constraints</em>.
+          </li>
+          <li class="mb-2">
+            <strong>Generate</strong> — Click <em>Generate Schedule with AI</em>. Claude reviews all data, checks for conflicts, and proposes assignments.
+          </li>
+          <li class="mb-2">
+            <strong>Review</strong> — Go to the <em>Schedule</em> grid. Confirm entries that look good, reject ones that don't, or move them to a different room / time.
+          </li>
+          <li>
+            <strong>Iterate</strong> — Add new constraints as information arrives and re-generate. Confirmed entries stay locked.
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('gen-form-dash')?.addEventListener('submit', function() {
+  const btn = document.getElementById('gen-btn-dash');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Generating… (may take ~30s)';
+});
+</script>
+{% endblock %}

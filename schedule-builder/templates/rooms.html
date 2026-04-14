@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% block title %}Rooms{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0"><i class="bi bi-building"></i> Rooms <span class="badge bg-secondary">{{ rooms|length }}</span></h2>
+  <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">
+    <i class="bi bi-plus-lg"></i> Add Room
+  </button>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover table-sm mb-0 align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Room Name</th>
+            <th>Building</th>
+            <th>Capacity</th>
+            <th>Type</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rooms %}
+          <tr>
+            <td class="fw-semibold">{{ r.name }}</td>
+            <td>{{ r.building }}</td>
+            <td>
+              <span class="badge bg-secondary">{{ r.capacity }} seats</span>
+            </td>
+            <td>{{ r.room_type }}</td>
+            <td>
+              <button class="btn btn-outline-secondary btn-sm"
+                      data-bs-toggle="modal" data-bs-target="#editModal"
+                      data-id="{{ r.id }}"
+                      data-name="{{ r.name }}"
+                      data-building="{{ r.building }}"
+                      data-capacity="{{ r.capacity }}"
+                      data-type="{{ r.room_type }}">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <form method="post" action="{{ url_for('rooms_delete', room_id=r.id) }}"
+                    class="d-inline" onsubmit="return confirm('Deactivate this room?')">
+                <button class="btn btn-outline-danger btn-sm"><i class="bi bi-dash-circle"></i></button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="text-center text-muted py-4">
+            No rooms yet. <a href="{{ url_for('import_page') }}">Import data</a> or add one manually.
+          </td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{{ url_for('rooms_add') }}">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Room</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body row g-3">
+          <div class="col-12">
+            <label class="form-label fw-semibold">Room Name <span class="text-danger">*</span></label>
+            <input name="name" class="form-control" placeholder="Miller 1082" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Building</label>
+            <select name="building" class="form-select">
+              <option selected>Miller</option>
+              <option>ISC</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Capacity</label>
+            <input name="capacity" type="number" class="form-control" value="45" min="1">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Room Type</label>
+            <select name="room_type" class="form-select">
+              <option>Standard</option>
+              <option>Flat</option>
+              <option>Cluster</option>
+              <option>Tiered</option>
+              <option>Seminar</option>
+              <option>Design Lab</option>
+              <option>Finance Markets</option>
+              <option>Large Lecture</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Room</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" id="editForm">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Room</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body row g-3">
+          <div class="col-12">
+            <label class="form-label fw-semibold">Room Name</label>
+            <input name="name" id="e_name" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Building</label>
+            <select name="building" id="e_building" class="form-select">
+              <option>Miller</option><option>ISC</option><option>Other</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Capacity</label>
+            <input name="capacity" id="e_capacity" type="number" class="form-control" min="1">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Room Type</label>
+            <select name="room_type" id="e_type" class="form-select">
+              <option>Standard</option><option>Flat</option><option>Cluster</option>
+              <option>Tiered</option><option>Seminar</option><option>Design Lab</option>
+              <option>Finance Markets</option><option>Large Lecture</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('editModal').addEventListener('show.bs.modal', function(e) {
+  const b = e.relatedTarget;
+  document.getElementById('editForm').action  = `/rooms/${b.dataset.id}/edit`;
+  document.getElementById('e_name').value     = b.dataset.name;
+  document.getElementById('e_building').value = b.dataset.building;
+  document.getElementById('e_capacity').value = b.dataset.capacity;
+  document.getElementById('e_type').value     = b.dataset.type;
+});
+</script>
+{% endblock %}

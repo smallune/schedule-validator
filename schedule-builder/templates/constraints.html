@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}Constraints{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0"><i class="bi bi-exclamation-circle"></i> Constraints</h2>
+    <p class="text-muted mb-0 small">Professor availability, room restrictions, and scheduling preferences.</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Add constraint form -->
+  <div class="col-lg-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-dark text-white fw-semibold">
+        <i class="bi bi-plus-circle"></i> Add Constraint
+      </div>
+      <div class="card-body">
+        <form method="post" action="{{ url_for('constraints_add') }}">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Category</label>
+            <select name="category" class="form-select" id="cat-select">
+              <option value="professor">Professor Availability</option>
+              <option value="course">Course Requirement</option>
+              <option value="room">Room Restriction</option>
+              <option value="general">General Preference</option>
+            </select>
+          </div>
+          <div class="mb-3" id="instructor-field">
+            <label class="form-label fw-semibold">Instructor Name <span class="text-muted fw-normal">(optional)</span></label>
+            <input name="instructor_name" class="form-control" placeholder="e.g. Smith">
+            <div class="form-text">Fill in when this constraint applies to a specific professor.</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
+            <textarea name="description" class="form-control" rows="4" required
+              placeholder="e.g. Prof. Smith cannot teach on Tuesdays before noon due to a standing committee obligation."></textarea>
+            <div class="form-text">Write it exactly as you received it — Claude reads this verbatim.</div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-plus-lg"></i> Add Constraint
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mt-3">
+      <div class="card-header fw-semibold"><i class="bi bi-lightbulb"></i> Tips</div>
+      <div class="card-body small text-muted">
+        <ul class="mb-0 ps-3">
+          <li>Paste professor emails directly into the description — Claude understands natural language.</li>
+          <li>Be specific: include days, times, and reasons when available.</li>
+          <li>Add room restrictions if a course always needs a specific room (e.g., Finance Markets lab).</li>
+          <li>After adding constraints, re-run <strong>Generate Schedule</strong> to incorporate them.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Existing constraints -->
+  <div class="col-lg-8">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header fw-semibold">
+        Active Constraints <span class="badge bg-secondary">{{ constraints|length }}</span>
+      </div>
+      <div class="card-body p-0">
+        {% if constraints %}
+        <ul class="list-group list-group-flush">
+          {% for c in constraints %}
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1 me-3">
+                {% set badge_colors = {
+                  'professor': 'warning',
+                  'course': 'info',
+                  'room': 'secondary',
+                  'general': 'light'
+                } %}
+                <span class="badge bg-{{ badge_colors.get(c.category, 'secondary') }} text-dark me-1">
+                  {{ c.category|title }}
+                </span>
+                {% if c.instructor_name %}
+                  <span class="badge bg-dark me-1">{{ c.instructor_name }}</span>
+                {% endif %}
+                <span class="text-muted small">{{ c.created_at[:10] }}</span>
+                <p class="mb-0 mt-1">{{ c.description }}</p>
+              </div>
+              <form method="post" action="{{ url_for('constraints_delete', cid=c.id) }}"
+                    onsubmit="return confirm('Remove this constraint?')">
+                <button class="btn btn-outline-danger btn-sm">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <div class="text-center text-muted py-5">
+          <i class="bi bi-inbox display-6 d-block mb-2"></i>
+          No constraints yet. Add your first one using the form on the left.
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const sel = document.getElementById('cat-select');
+const field = document.getElementById('instructor-field');
+sel.addEventListener('change', () => {
+  field.style.display = sel.value === 'professor' ? '' : 'none';
+});
+sel.dispatchEvent(new Event('change'));
+</script>
+{% endblock %}

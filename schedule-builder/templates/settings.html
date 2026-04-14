@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+
+    <h2 class="mb-4"><i class="bi bi-gear"></i> Settings</h2>
+
+    <!-- API Key card -->
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header fw-semibold bg-dark text-white">
+        <i class="bi bi-key"></i> Google Gemini API Key
+      </div>
+      <div class="card-body">
+
+        {% if has_key %}
+        <div class="alert alert-success">
+          <i class="bi bi-check-circle-fill"></i>
+          API key is configured: <code>{{ masked_key }}</code>
+        </div>
+        {% else %}
+        <div class="alert alert-warning">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          No API key set. The AI scheduling feature will not work until you add one.
+        </div>
+        {% endif %}
+
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">
+              Enter API Key <span class="text-danger">*</span>
+            </label>
+            <input type="password" name="api_key" class="form-control font-monospace"
+                   placeholder="AIza..."
+                   autocomplete="off" required>
+            <div class="form-text">
+              Your key is stored only on this computer and never sent anywhere except directly to Google.
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save"></i> Save API Key
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- How to get a key -->
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header fw-semibold">
+        <i class="bi bi-question-circle"></i> How to get an API key
+      </div>
+      <div class="card-body">
+        <ol class="mb-0">
+          <li class="mb-2">Go to <strong>aistudio.google.com</strong> and sign in with your W&M Google account.</li>
+          <li class="mb-2">Click <strong>Get API Key</strong> in the left sidebar.</li>
+          <li class="mb-2">Click <strong>Create API Key</strong>, select a project, and copy the key.</li>
+          <li>Paste it into the box above and click <strong>Save API Key</strong>.</li>
+        </ol>
+        <div class="alert alert-info small mt-3 mb-0">
+          <i class="bi bi-info-circle"></i>
+          The key starts with <code>AIza</code>. Keep it private — do not share it.
+        </div>
+      </div>
+    </div>
+
+    <!-- App info -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header fw-semibold">
+        <i class="bi bi-info-circle"></i> App Info
+      </div>
+      <div class="card-body small text-muted">
+        <p class="mb-1"><strong>AI Model:</strong> Gemini 2.0 Flash (Google)</p>
+        <p class="mb-1"><strong>Data storage:</strong> Local SQLite database (<code>schedule.db</code>)</p>
+        <p class="mb-0"><strong>Data privacy:</strong> Course and room data is sent to Google only when you click "Generate with AI".</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
