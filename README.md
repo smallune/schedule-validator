@@ -6,7 +6,6 @@
 [![AI-Powered](https://img.shields.io/badge/AI--Powered-Gemini_1.5_Flash-B79257?style=flat-square)](https://deepmind.google/technologies/gemini/)
 
 ## Overview
-![Schedule Validator Hero](src/assets/hero.png)
 
 The **Schedule Conflict Validator** is a specialized web application designed to maintain the integrity of academic course catalogs. Specifically tailored for the unique requirements of the William & Mary Mason School of Business, it automates the tedious process of auditing course schedules for capacity violations, room double-bookings, and instructor overlaps.
 
