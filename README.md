@@ -5,7 +5,7 @@
 [![Built with React](https://img.shields.io/badge/Built_with-React_19-1565C0?style=flat-square)](https://react.dev/)
 [![AI-Powered](https://img.shields.io/badge/AI--Powered-Gemini_1.5_Flash-B79257?style=flat-square)](https://deepmind.google/technologies/gemini/)
 
-## 🌟 Overview
+## Overview
 ![Schedule Validator Hero](src/assets/hero.png)
 
 The **Schedule Conflict Validator** is a specialized web application designed to maintain the integrity of academic course catalogs. Specifically tailored for the unique requirements of the William & Mary Mason School of Business, it automates the tedious process of auditing course schedules for capacity violations, room double-bookings, and instructor overlaps.
@@ -17,14 +17,15 @@ The **Schedule Conflict Validator** is a specialized web application designed to
 
 ---
 
-## 👥 Author List
+## Author List
 - **Conner Small** ([@smallune](https://github.com/smallune))
-  - *Lead Developer & Architect*
-  - [Bio: MSBA Student at William & Mary | Passionate about AI-driven operational efficiency.]
+- **Alex Farina**
+- **Alexa Mikeska**
+- **Justin Varela**
 
 ---
 
-## 🎯 Project Scope
+## Project Scope
 The project is narrowly focused on the **Validation and Conflict Resolution** phase of the university scheduling lifecycle.
 
 **In Scope:**
@@ -41,7 +42,7 @@ The project is narrowly focused on the **Validation and Conflict Resolution** ph
 
 ---
 
-## 🛠️ Project Details
+## Project Details
 
 ### 1. Audit Engine Logic
 The core audit logic (`src/auditLogic.js`) uses a high-performance set-based approach to detect overlaps. It transforms standard university timeslots (e.g., "0930-1045") into absolute minute values and performs interval intersection checks.
@@ -61,7 +62,7 @@ It then offers 2–3 specific, actionable fixes (e.g., "Move BNAL 301 to Miller 
 
 ---
 
-## 🤖 Responsible AI Considerations
+## Responsible AI Considerations
 This project integrates Generative AI to assist administrators, following these core principles:
 
 1.  **Human-in-the-Loop:** AI never modifies the schedule directly. It provides *suggestions* that must be reviewed, edited, and approved by the Registrar.
@@ -71,18 +72,11 @@ This project integrates Generative AI to assist administrators, following these 
 
 ---
 
-## 🚀 What's Next?
+## What's Next?
 1.  **Automated Generator:** Moving from validation to generation using Genetic Algorithms (see References).
 2.  **Faculty Preference Portal:** Integrating a front-end for professors to submit their "optimal" teaching windows.
 3.  **Cross-Campus Extension:** Scaling the tool beyond the Business School to the entire W&M campus.
 4.  **Student Conflict Detection:** Detecting "Schedule Bottlenecks" where two required courses for a major are scheduled at the same time.
-
----
-
-## 📚 References
-### Primary Research Paper
-- **Chen, X., & Zhang, Y. (2025).** *Gradual Optimization of University Course Scheduling Problem (UCSP) Using Hybrid Genetic Algorithm and Dynamic Programming.* [Published in Journal of Educational Technology & Systems].
-  - *Key Takeaway:* This paper demonstrates how hybrid metaheuristics can improve scheduling quality by 46.99% compared to traditional manual methods.
 
 ### Additional Resources
 - [Vite Documentation](https://vitejs.dev/) - Project Build Tool.
