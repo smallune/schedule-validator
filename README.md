@@ -1,6 +1,8 @@
 # Schedule Conflict Validator
 ### *A Precision Auditing Tool for the W&M Mason School of Business Registrar*
 
+Live site: (https://schedule-validator.onrender.com/)
+
 [![Mason School of Business](https://img.shields.io/badge/W%26M-Mason_School_of_Business-004E38?style=flat-square)](https://mason.wm.edu/)
 [![Built with React](https://img.shields.io/badge/Built_with-React_19-1565C0?style=flat-square)](https://react.dev/)
 [![AI-Powered](https://img.shields.io/badge/AI--Powered-Gemini_1.5_Flash-B79257?style=flat-square)](https://deepmind.google/technologies/gemini/)
